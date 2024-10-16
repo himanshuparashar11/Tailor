@@ -25,7 +25,7 @@ CREATE TABLE Service_Provider (
 );
 
 --------------------------------------------------------
-CREATE TABLE User_Order (
+CREATE TABLE `Order` (
     order_id INT PRIMARY KEY,
     customer_id INT,
     service_provider_id INT,
@@ -44,7 +44,7 @@ CREATE TABLE Order_Tracking (
     order_id INT,
     tracking_status VARCHAR(50) NOT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES User_Order(order_id)
+    FOREIGN KEY (order_id) REFERENCES `Order`(order_id)
 );
 --------------------------------------------------
 CREATE TABLE Order_Alteration (
@@ -55,19 +55,30 @@ CREATE TABLE Order_Alteration (
     requested_changes TEXT NOT NULL,
     status VARCHAR(50) DEFAULT 'Pending',
     request_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ,
-    FOREIGN KEY (order_id) REFERENCES User_Order(order_id),
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES `Order`(order_id),
     FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
     FOREIGN KEY (service_provider_id) REFERENCES Service_Provider(service_provider_id)
 );
-
-------------------------------------------------
-CREATE TABLE Address (
-    address_id INT PRIMARY KEY,
-    address_line_1 VARCHAR(255) NOT NULL,
-    address_line_2 VARCHAR(255),
-    city VARCHAR(100) NOT NULL,
-    state VARCHAR(100) NOT NULL,
-    pin_code VARCHAR(10) NOT NULL,
-    country VARCHAR(100) NOT NULL
+---------------------------------------------------
+CREATE TABLE Category (
+    category_id INT PRIMARY KEY,
+    category_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+---------------------------------------------------
+CREATE TABLE Item_Master (
+    item_id INT PRIMARY KEY,
+    item_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    category VARCHAR(100),
+    price DECIMAL(10, 2) NOT NULL,
+    quantity_in_stock INT DEFAULT 0,
+    unit_of_measure VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
